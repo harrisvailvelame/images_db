@@ -1,0 +1,22 @@
+name: repository-quality
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install runtime dependency
+        run: pip install -r requirements.txt
+      - name: Compile Python
+        run: python -m py_compile website_upload_pics.py
+      - name: Validate shell syntax
+        run: bash -n daemon_aura.sh
+      - name: Smoke test empty staging queue
+        run: python website_upload_pics.py
